@@ -50,14 +50,16 @@ defineProps({
   font-size: x-large;
 }
 .room-status {
-  width: 300px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  background-color: #adffda;
   cursor: pointer;
 }
 .btn-status {
   width: 30%;
+  padding: 2px;
+  border: black 1px solid;
+  background-color: #adffda;
 }
 
 .choosen-btn-status {
