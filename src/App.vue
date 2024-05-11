@@ -1,23 +1,23 @@
 <script setup>
 import RoomComponent from './components/RoomComponent.vue'
+
+import vTable from './components/vTable.vue';
 import { ref } from 'vue';
 
 import {linens_for_checkOut, linens_for_stayOver} from './components/linens_for_rooms'
 
-
-const linensNeeded = {
-  "03": {},
-  "04": {},
-  "05": {},
-  "06": {},
-  "07": {},
-  "08": {},
-  "09": {},
-  "10": {},
-  "11": {},
-  "12": {},
-  
-}
+let linensNeeded = ref({
+  "03": {floor: "03"},
+  "04": {floor: "04"},
+  "05": {floor: "05"},
+  "06": {floor: "06"},
+  "07": {floor: "07"},
+  "08": {floor: "08"},
+  "09": {floor: "09"},
+  "10": {floor: "10"},
+  "11": {floor: "11"},
+  "12": {floor: "12"},
+})
 
 const hotelData = ref({
     rooms: [
@@ -78,55 +78,34 @@ const hotelData = ref({
     }
 })
 
-// 
-// function createTheTable() {
-//   let floorNumber = 3
-//   let objFloor = {}
-//   for (let i = 0; i < hotelData.value.rooms.length; i++) {
-//     const currentRoom = hotelData.value.rooms[i]
 
-//     if(currentRoom.room_number.substring(0,2) == floorNumber) {
-      
-//       objFloor.floor = floorNumber
-//       if(currentRoom.status == "Check Out") {
-        
-//         Object.keys(linens_for_checkOut[currentRoom.room_type]).forEach(key => {
-//           objFloor[key] = (objFloor[key] || 0) + linens_for_checkOut[currentRoom.room_type][key]
-//         })
-//         console.log(objFloor)
-//       }
-
-//       if(currentRoom.status == "Stay Over") {
-//         Object.keys(linens_for_stayOver[currentRoom.room_type]).forEach(key => {
-//           objFloor[key] = (objFloor[key] || 0) + linens_for_stayOver[currentRoom.room_type][key]
-//         })
-//       }
-//     }
-//     if(currentRoom.room_number.substring(2,2) == 15) {
-//       floorNumber++
-//       linensNeeded.push(objFloor)
-//       objFloor = {}
-//     }
-    
-//   }
-
-//   console.log(linensNeeded)
-// }
-
-const createTheTable = (() => {
+const calculateForFloors = (() => {
+  linensNeeded.value = {
+  "03": {floor: "03"},
+  "04": {floor: "04"},
+  "05": {floor: "05"},
+  "06": {floor: "06"},
+  "07": {floor: "07"},
+  "08": {floor: "08"},
+  "09": {floor: "09"},
+  "10": {floor: "10"},
+  "11": {floor: "11"},
+  "12": {floor: "12"},
+}
   hotelData.value.rooms.forEach(currentRoom => {
     if(currentRoom.status === "Stay Over") {
       Object.keys(linens_for_stayOver[currentRoom.room_type]).forEach(key => {
-        linensNeeded[currentRoom.room_number.substring(0,2)][key] = (linensNeeded[currentRoom.room_number.substring(0,2)][key] || 0) + linens_for_stayOver[currentRoom.room_type][key]
+        linensNeeded.value[currentRoom.room_number.substring(0,2)][key] = (linensNeeded.value[currentRoom.room_number.substring(0,2)][key] || 0) + linens_for_stayOver[currentRoom.room_type][key]
       })
     } else if(currentRoom.status === "Check Out") {
       Object.keys(linens_for_checkOut[currentRoom.room_type]).forEach(key => {
-        linensNeeded[currentRoom.room_number.substring(0,2)][key] = (linensNeeded[currentRoom.room_number.substring(0,2)][key] || 0) + linens_for_checkOut[currentRoom.room_type][key]
+        linensNeeded.value[currentRoom.room_number.substring(0,2)][key] = (linensNeeded.value[currentRoom.room_number.substring(0,2)][key] || 0) + linens_for_checkOut[currentRoom.room_type][key]
       })
     }
   })
-  console.log(linensNeeded)
+  console.log(linensNeeded.value)
 })
+
 
 function changeStatus(room, newStatus) {
   hotelData.value.changeStatus(room, newStatus)
@@ -142,8 +121,11 @@ function changeStatus(room, newStatus) {
         @change-status="changeStatus"
       />
     </div>
-    <button @click="createTheTable">DO IT!</button>
+    <button @click="calculateForFloors">DO IT!</button>
   </div>
+
+  <vTable :table-obj="linensNeeded"/>
+  
 </template>
 
 <style scoped>
