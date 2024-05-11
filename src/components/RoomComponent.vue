@@ -1,45 +1,35 @@
 <script setup>
-
-import { ref } from 'vue';
 defineProps({
-  roomNumber: {
-    type: String,
+  roomObj: {
+    type: Object,
     required: true
   }
 })
 
-let status = ref("None")
-    
-
-
-function changeStatus(value) {
-  status.value = value
-  console.log(status.value)
-}
 </script>
 
 <template>
   <div class="room">
-    <div class="room-number">{{ roomNumber }}</div>
+    <div class="room-number">{{ roomObj.room_number }}</div>
     <div class="room-status">
       <div
         class="btn-status"
-        :class="status == 'None' ? 'choosen-btn-status' : ''"
-        @click="changeStatus('None')"
+        :class="roomObj.status == 'None' ? 'choosen-btn-status' : ''"
+        @click="$emit('changeStatus',roomObj.room_number, 'None')"
       >
         None
       </div>
       <div
         class="btn-status"
-        :class="status == 'Stay Over' ? 'choosen-btn-status' : ''"
-        @click="changeStatus('Stay Over')"
+        :class="roomObj.status == 'Stay Over' ? 'choosen-btn-status' : ''"
+        @click="$emit('changeStatus',roomObj.room_number, 'Stay Over')"
       >
         Stay Over
       </div>
       <div
         class="btn-status"
-        :class="status == 'Check Out' ? 'choosen-btn-status' : ''"
-        @click="changeStatus('Check Out')"
+        :class="roomObj.status == 'Check Out' ? 'choosen-btn-status' : ''"
+        @click="$emit('changeStatus',roomObj.room_number, 'Check Out')"
       >
         Check Out
       </div>
@@ -49,15 +39,15 @@ function changeStatus(value) {
 
 <style scoped>
 .room {
-    width: 100%;
-    background-color: aliceblue;
-    margin-bottom: 5px;
+  width: 100%;
+  background-color: aliceblue;
+  margin-bottom: 5px;
 }
 .room-number {
-    display: flex;
-    justify-content: center;
-    color: green;
-    font-size: x-large;
+  display: flex;
+  justify-content: center;
+  color: green;
+  font-size: x-large;
 }
 .room-status {
   width: 300px;
