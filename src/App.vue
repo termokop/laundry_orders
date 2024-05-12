@@ -6,6 +6,7 @@ import vTable from './components/vTable.vue'
 import { linens_for_checkOut, linens_for_stayOver } from './components/linens_for_rooms'
 import { rooms_info } from './components/rooms_info'
 
+let showRoomList = ref(true)
 let linensNeeded = ref({
   3: { floor: '3' },
   4: { floor: '4' },
@@ -65,22 +66,40 @@ const calculateForFloors = () => {
 function changeStatus(room, newStatus) {
   hotelData.value.changeStatus(room, newStatus)
 }
+
+const hideRoomsList = (() => {
+  showRoomList.value = !showRoomList.value
+})
 </script>
 
 <template>
-  <div class="app-class">
+  <div class="app-class" v-show="showRoomList">
     <div v-for="room in hotelData.rooms" :key="room.room_number">
       <RoomComponent :room-obj="room" @change-status="changeStatus" />
     </div>
-    <button @click="calculateForFloors">DO IT!</button>
   </div>
 
+  <div class="btns">
+    <button @click="calculateForFloors">DO IT!</button>
+    <button @click="hideRoomsList">Hide/show rooms</button>
+  </div>
   <vTable :table-obj="linensNeeded" />
 </template>
 
 <style scoped>
-.app-class {
+.app-class, .btns {
   min-width: 400px;
   width: 100%;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-around;
+  margin: 10px;
+}
+
+.btns button {
+  height: 40px;
+  width: 30%;
 }
 </style>
