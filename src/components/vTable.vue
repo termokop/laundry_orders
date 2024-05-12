@@ -1,5 +1,6 @@
 <script setup>
-defineProps({
+
+const prop = defineProps({
   tableObj: {
     type: Object,
     required: true
@@ -8,7 +9,7 @@ defineProps({
 </script>
 
 <template>
-  <div>
+  <div class="table-container">
     <table>
       <tr>
         <th>Floor</th>
@@ -26,8 +27,12 @@ defineProps({
         <th>Hand towel</th>
         <th>Bath towel</th>
       </tr>
-      <tr v-for="floor in tableObj" :key="floor.floor">
-        <td>{{floor.floor}}</td>
+      <tr
+        v-for="floor in prop.tableObj"
+        :key="floor.floor"
+        :class="floor.floor % 2 == 0 ? 'gray-bg' : ''"
+      >
+        <td class="floor-number">{{ floor.floor }}</td>
         <td>{{ Math.ceil(floor.king_pillow_sham) || 0 }}</td>
         <td>{{ Math.ceil(floor.queen_pillow_sham) || 0 }}</td>
         <td>{{ Math.ceil(floor.king_pillow_case) || 0 }}</td>
@@ -45,3 +50,22 @@ defineProps({
     </table>
   </div>
 </template>
+
+<style scoped>
+table {
+  border: 2px black solid;
+}
+tr {
+  background-color: white;
+}
+
+th {
+  font-weight: bold;
+}
+.floor-number {
+    font-weight: bold;
+}
+.gray-bg {
+  background-color: lightgray;
+}
+</style>
