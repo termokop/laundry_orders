@@ -31,7 +31,7 @@ const prop = defineProps({
       <tr
         v-for="floor in prop.tableObj"
         :key="floor.floor"
-        :class="floor.floor % 2 == 0 ? 'gray-bg' : ''"
+        :class="{'gray-bg' : floor.floor % 2 == 0}"
       >
         <td class="floor-number">{{ floor.floor }}</td>
         <td>{{ Math.ceil(floor.king_pillow_sham) || 0 }}</td>
@@ -47,7 +47,7 @@ const prop = defineProps({
         <td>{{ Math.ceil(floor.bath_robe) || 0 }}</td>
         <td>{{ Math.ceil(floor.hand_towel) || 0 }}</td>
         <td>{{ Math.ceil(floor.bath_towel) || 0 }}</td>
-        <td>{{ floor.totalCheckOuts || 0 }}</td>
+        <td class="total">{{ floor.totalCheckOuts || 0 }}</td>
       </tr>
     </table>
   </div>
@@ -57,16 +57,15 @@ const prop = defineProps({
 table {
   border: 2px black solid;
 }
-tr {
-  background-color: white;
+
+td {
+  text-align: center;
 }
 
-th {
-  font-weight: bold;
-}
-.floor-number {
+.floor-number, .total, th {
     font-weight: bold;
 }
+
 .gray-bg {
   background-color: lightgray;
 }

@@ -17,7 +17,8 @@ let linensNeeded = ref({
   9: { floor: '9' },
   10: { floor: '10' },
   11: { floor: '11' },
-  12: { floor: '12' }
+  12: { floor: '12' },
+  13: { floor: 'Total' }
 })
 
 const hotelData = ref({
@@ -43,7 +44,8 @@ const calculateForFloors = () => {
     9: { floor: '9' },
     10: { floor: '10' },
     11: { floor: '11' },
-    12: { floor: '12' }
+    12: { floor: '12' },
+    13: { floor: 'Total' }
   }
   hotelData.value.rooms.forEach((currentRoom) => {
     const floorNumber = parseInt(currentRoom.room_number.substring(0, 2)).toString()
@@ -54,6 +56,11 @@ const calculateForFloors = () => {
         linensNeeded.value[floorNumber][key] =
           (linensNeeded.value[floorNumber][key] || 0) +
           linens_for_stayOver[currentRoom.room_type][key]
+
+        // Total number of particular type of linens
+        linensNeeded.value["13"][key] =
+          (linensNeeded.value["13"][key] || 0) +
+          linens_for_stayOver[currentRoom.room_type][key]
       })
 
       // add linens if room has 'check out' status
@@ -63,21 +70,34 @@ const calculateForFloors = () => {
         linensNeeded.value[floorNumber][key] =
           (linensNeeded.value[floorNumber][key] || 0) +
           linens_for_checkOut[currentRoom.room_type][key]
+
+        // Total number of particular type of linens
+        linensNeeded.value["13"][key] =
+          (linensNeeded.value["13"][key] || 0) +
+          linens_for_checkOut[currentRoom.room_type][key]
       })
+      // count total number of checkouts for each floor
       linensNeeded.value[floorNumber]['totalCheckOuts'] =
-        linensNeeded.value[floorNumber]['totalCheckOuts'] != undefined // count total number of checkouts for each floor
+        linensNeeded.value[floorNumber]['totalCheckOuts'] != undefined 
           ? linensNeeded.value[floorNumber]['totalCheckOuts'] + 1
+          : 1
+      // count total number of checkouts for all floors
+      linensNeeded.value["13"]['totalCheckOuts'] =
+        linensNeeded.value["13"]['totalCheckOuts'] != undefined 
+          ? linensNeeded.value["13"]['totalCheckOuts'] + 1
           : 1
     }
   })
   console.log(linensNeeded.value)
 }
 
-function changeStatus(room, newStatus) { // update room status
+function changeStatus(room, newStatus) {
+  // update room status
   hotelData.value.changeStatus(room, newStatus)
 }
 
-const hideRoomsList = () => { // hide list of rooms
+const hideRoomsList = () => {
+  // hide list of rooms
   showRoomList.value = !showRoomList.value
 }
 </script>
