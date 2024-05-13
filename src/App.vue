@@ -46,30 +46,40 @@ const calculateForFloors = () => {
     12: { floor: '12' }
   }
   hotelData.value.rooms.forEach((currentRoom) => {
+    const floorNumber = parseInt(currentRoom.room_number.substring(0, 2)).toString()
+
+    // add linens if room has 'stay over' status
     if (currentRoom.status === 'Stay Over') {
       Object.keys(linens_for_stayOver[currentRoom.room_type]).forEach((key) => {
-        linensNeeded.value[parseInt(currentRoom.room_number.substring(0, 2)).toString()][key] =
-          (linensNeeded.value[parseInt(currentRoom.room_number.substring(0, 2)).toString()][key] ||
-            0) + linens_for_stayOver[currentRoom.room_type][key]
+        linensNeeded.value[floorNumber][key] =
+          (linensNeeded.value[floorNumber][key] || 0) +
+          linens_for_stayOver[currentRoom.room_type][key]
       })
+
+      // add linens if room has 'check out' status
     } else if (currentRoom.status === 'Check Out') {
+      const floorNumber = parseInt(currentRoom.room_number.substring(0, 2)).toString()
       Object.keys(linens_for_checkOut[currentRoom.room_type]).forEach((key) => {
-        linensNeeded.value[parseInt(currentRoom.room_number.substring(0, 2)).toString()][key] =
-          (linensNeeded.value[parseInt(currentRoom.room_number.substring(0, 2)).toString()][key] ||
-            0) + linens_for_checkOut[currentRoom.room_type][key]
+        linensNeeded.value[floorNumber][key] =
+          (linensNeeded.value[floorNumber][key] || 0) +
+          linens_for_checkOut[currentRoom.room_type][key]
       })
+      linensNeeded.value[floorNumber]['totalCheckOuts'] =
+        linensNeeded.value[floorNumber]['totalCheckOuts'] != undefined // count total number of checkouts for each floor
+          ? linensNeeded.value[floorNumber]['totalCheckOuts'] + 1
+          : 1
     }
   })
   console.log(linensNeeded.value)
 }
 
-function changeStatus(room, newStatus) {
+function changeStatus(room, newStatus) { // update room status
   hotelData.value.changeStatus(room, newStatus)
 }
 
-const hideRoomsList = (() => {
+const hideRoomsList = () => { // hide list of rooms
   showRoomList.value = !showRoomList.value
-})
+}
 </script>
 
 <template>
@@ -87,7 +97,8 @@ const hideRoomsList = (() => {
 </template>
 
 <style scoped>
-.app-class, .btns {
+.app-class,
+.btns {
   min-width: 400px;
   width: 100%;
 }

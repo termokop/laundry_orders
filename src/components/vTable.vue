@@ -26,6 +26,7 @@ const prop = defineProps({
         <th>Bath Robe</th>
         <th>Hand towel</th>
         <th>Bath towel</th>
+        <th>Check Outs</th>
       </tr>
       <tr
         v-for="floor in prop.tableObj"
@@ -46,6 +47,7 @@ const prop = defineProps({
         <td>{{ Math.ceil(floor.bath_robe) || 0 }}</td>
         <td>{{ Math.ceil(floor.hand_towel) || 0 }}</td>
         <td>{{ Math.ceil(floor.bath_towel) || 0 }}</td>
+        <td>{{ floor.totalCheckOuts || 0 }}</td>
       </tr>
     </table>
   </div>
