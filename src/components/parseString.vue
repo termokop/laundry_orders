@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import { sample } from './string_template';
+// import { sample } from './string_template';
 
 const emit = defineEmits(['changeStatus'])
 
-let strForParse = ref(sample)
+let strForParse = ref('')
 
 const parseTheString = (() => {
     let strWithoutSpaces = strForParse.value.replace(/\n/g, "").replace(/\s+/g, "")
@@ -49,6 +49,16 @@ const changeStatusForArr = (arr => {
 
     <div>
         <textarea name="strForParse" id="" cols="100" rows="10" v-model="strForParse"></textarea>
-        <button @click="parseTheString">Parse the text</button>
+        <div class="btns">
+            <button @click="parseTheString">Parse the text</button>
+        </div>
     </div>
 </template>
+
+<style scoped>
+
+textarea {
+    width: 100%;
+}
+
+</style>

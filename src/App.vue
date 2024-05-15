@@ -7,7 +7,9 @@ import parseString from './components/parseString.vue'
 import { linens_for_checkOut, linens_for_stayOver } from './components/linens_for_rooms'
 import { rooms_info } from './components/rooms_info'
 
-let showRoomList = ref(true)
+let showRoomList = ref(false)
+let showParseComponent = ref(true)
+
 let linensNeeded = ref({
   3: { floor: '3' },
   4: { floor: '4' },
@@ -104,10 +106,19 @@ const hideRoomsList = () => {
   // hide list of rooms
   showRoomList.value = !showRoomList.value
 }
+
+const hideParsComponent = () => {
+  showParseComponent.value = !showParseComponent.value
+}
 </script>
 
 <template>
-  <parseString @change-status="changeStatus"></parseString>
+  <parseString @change-status="changeStatus" v-show="showParseComponent"></parseString>
+
+  <div class="btns">
+    <button @click="hideRoomsList">Hide/show rooms</button>
+    <button @click="hideParsComponent">Hide/show text field</button>
+  </div>
 
   <div class="app-class" v-show="showRoomList">
     <div v-for="room in hotelData.rooms" :key="room.room_number">
@@ -115,14 +126,10 @@ const hideRoomsList = () => {
     </div>
   </div>
 
-  <div class="btns">
-    <button @click="calculateForFloors">DO IT!</button>
-    <button @click="hideRoomsList">Hide/show rooms</button>
-  </div>
   <vTable :table-obj="linensNeeded" />
 </template>
 
-<style scoped>
+<style>
 .app-class,
 .btns {
   min-width: 400px;
