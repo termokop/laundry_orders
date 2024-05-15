@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import RoomComponent from './components/RoomComponent.vue'
 import vTable from './components/vTable.vue'
+import parseString from './components/parseString.vue'
 
 import { linens_for_checkOut, linens_for_stayOver } from './components/linens_for_rooms'
 import { rooms_info } from './components/rooms_info'
@@ -92,8 +93,11 @@ const calculateForFloors = () => {
 }
 
 function changeStatus(room, newStatus) {
+  console.info(room, newStatus)
   // update room status
   hotelData.value.changeStatus(room, newStatus)
+
+  calculateForFloors()
 }
 
 const hideRoomsList = () => {
@@ -103,6 +107,8 @@ const hideRoomsList = () => {
 </script>
 
 <template>
+  <parseString @change-status="changeStatus"></parseString>
+
   <div class="app-class" v-show="showRoomList">
     <div v-for="room in hotelData.rooms" :key="room.room_number">
       <RoomComponent :room-obj="room" @change-status="changeStatus" />
